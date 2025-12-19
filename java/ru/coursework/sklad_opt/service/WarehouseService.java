@@ -1,0 +1,34 @@
+package ru.coursework.sklad_opt.service;
+
+import org.springframework.stereotype.Service;
+import ru.coursework.sklad_opt.model.Warehouse;
+import ru.coursework.sklad_opt.repository.WarehouseRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class WarehouseService {
+
+    private final WarehouseRepository warehouseRepository;
+
+    public WarehouseService(WarehouseRepository warehouseRepository) {
+        this.warehouseRepository = warehouseRepository;
+    }
+
+    public List<Warehouse> findAll() {
+        return warehouseRepository.findAll();
+    }
+
+    public Optional<Warehouse> findById(Long id) {
+        return warehouseRepository.findById(id);
+    }
+
+    public Optional<Warehouse> findByCode(String code) {
+        return warehouseRepository.findByCode(code);
+    }
+
+    public Warehouse save(Warehouse warehouse) {
+        return warehouseRepository.save(warehouse);
+    }
+}
