@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Главная | Склад</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main>
+        <section class="p-4 p-md-5 mb-4 hero-gradient">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <p class="text-uppercase small text-muted fw-semibold mb-2">Оптовый склад</p>
+                    <h1 class="display-6 fw-semibold mb-3">Контроль ассортимента, остатков и заказов в одном месте</h1>
+                    <p class="text-muted mb-4" sec:authorize="!hasRole('ROLE_ADMIN')">
+                        Быстрый доступ к каталогу, заказам и профилю. Отслеживайте доступность и оформляйте отгрузки.
+                    </p>
+                    <p class="text-muted mb-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                        Ведите каталог, управляйте поставками, контролируйте резервы и роли пользователей через админ-панель.
+                    </p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a class="btn btn-primary btn-lg" th:href="@{/products}">Перейти в каталог</a>
+                        <a class="btn btn-outline-secondary btn-lg" th:href="@{/orders}">Мои заказы</a>
+                        <a class="btn btn-outline-primary btn-lg" th:href="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')">Админ-панель</a>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-4 mt-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="text-muted small mb-2">Быстрые метрики</div>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="fw-semibold fs-4" th:text="${totalProducts}">0</div>
+                                    <div class="text-muted small">Товаров</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-semibold fs-4" th:text="${totalOrders}">0</div>
+                                    <div class="text-muted small">Заказов</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-semibold fs-4" th:text="${lowStock}">0</div>
+                                    <div class="text-muted small">Низкие остатки</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-semibold fs-4" th:text="${customersCount}">0</div>
+                                    <div class="text-muted small">Клиентов</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-between text-muted small">
+                                <span th:text="'Поставок: ' + ${batchesCount}">Поставок</span>
+                                <a th:href="@{/admin}" class="small text-decoration-none">Админ-панель →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="row g-3 mb-4">
+            <div class="col-lg-7">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Товар недели</h5>
+                            <a class="small text-decoration-none" th:href="@{/products}">Все товары</a>
+                        </div>
+                        <div th:if="${featured != null}" class="row g-3 align-items-center">
+                            <div class="col-md-5">
+                                <div class="ratio ratio-4x3 bg-light rounded border">
+                                    <img th:src="${featured.imageUrl != null ? featured.imageUrl : '/images/placeholder-product.svg'}"
+                                         class="object-fit-cover rounded" alt="Товар недели">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="text-muted small" th:text="${featured.sku}">SKU</div>
+                                <h4 class="fw-semibold mb-2" th:text="${featured.name}">Название</h4>
+                                <p class="text-muted" th:text="${featured.description}">Описание товара</p>
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="fw-semibold fs-5" th:text="${featured.price != null ? featured.price + ' ₽' : '—'}">0 ₽</div>
+                                    <div class="text-muted small" th:text="'Доступно: ' + ${featuredAvailable}">Доступно</div>
+                                </div>
+                                <div class="mt-3 d-flex gap-2">
+                                    <a class="btn btn-primary" th:href="@{'/products/' + ${featured.id}}">Открыть карточку</a>
+                                    <a class="btn btn-outline-secondary" th:href="@{/orders}">В заказы</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${featured == null}" class="text-muted">Добавьте товары, чтобы показать рекомендованный продукт.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Быстрые действия</h5>
+                            <span class="text-muted small">ADMIN</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-primary d-flex justify-content-between align-items-center" th:href="@{/batches}">
+                                <span>Принять поставку</span><span class="text-muted small">Поставки</span>
+                            </a>
+                            <a class="btn btn-outline-primary d-flex justify-content-between align-items-center" th:href="@{/stock-movements}">
+                                <span>Создать движение</span><span class="text-muted small">IN/OUT/TRANSFER</span>
+                            </a>
+                            <a class="btn btn-outline-primary d-flex justify-content-between align-items-center" th:href="@{/reports}">
+                                <span>Смотреть отчёты</span><span class="text-muted small">Отчётность</span>
+                            </a>
+                            <a class="btn btn-outline-secondary d-flex justify-content-between align-items-center" th:href="@{/admin/users}">
+                                <span>Пользователи</span><span class="text-muted small">Роли и доступ</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Подборка</h5>
+                <a class="small text-decoration-none" th:href="@{/products}">Каталог →</a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-3">
+                <div class="col" th:each="p : ${topProducts}">
+                    <a class="card h-100 text-decoration-none text-body shadow-sm border-0" th:href="@{'/products/' + ${p.id}}">
+                        <div class="ratio ratio-4x3 bg-light border-bottom rounded-top overflow-hidden">
+                            <img th:src="${p.imageUrl != null ? p.imageUrl : '/images/placeholder-product.svg'}"
+                                 class="object-fit-cover w-100 h-100" alt="Товар">
+                        </div>
+                        <div class="card-body">
+                            <div class="text-muted small" th:text="${p.sku}">SKU</div>
+                            <div class="fw-semibold" th:text="${p.name}">Название</div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div class="fw-semibold" th:text="${p.price != null ? p.price + ' ₽' : '—'}">0 ₽</div>
+                                <span class="badge" th:classappend="${p.active} ? 'text-bg-success' : 'text-bg-secondary'"
+                                      th:text="${p.active} ? 'Активен' : 'Неактивен'">Активен</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12" th:if="${#lists.isEmpty(topProducts)}">
+                    <div class="text-center text-muted py-3">Добавьте товары, чтобы показать подборку.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

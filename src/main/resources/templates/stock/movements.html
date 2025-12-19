@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Движения | Склад</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main>
+        <div th:replace="~{fragments/breadcrumbs :: breadcrumbs('Журнал движений')}"></div>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h1 class="h4 mb-0">Журнал движений</h1>
+                <p class="text-muted mb-0">Список IN/OUT/TRANSFER по товарам и складам.</p>
+            </div>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" th:href="@{/stock-movements/new}" aria-disabled="true">Создать движение</a>
+                <a class="btn btn-outline-secondary" th:href="@{/stock-movements/export}" aria-disabled="true">Экспорт</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Дата/время</th>
+                    <th>Тип</th>
+                    <th>Товар</th>
+                    <th>Склад</th>
+                    <th class="text-end">Кол-во</th>
+                    <th>Партия</th>
+                    <th>Заказ</th>
+                    <th>Комментарий</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mv : ${movements}">
+                    <td th:text="${#temporals.format(mv.movementTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 10:00</td>
+                    <td>
+                        <span class="badge text-bg-success" th:if="${mv.type.name() == 'IN'}">IN</span>
+                        <span class="badge text-bg-danger" th:if="${mv.type.name() == 'OUT'}">OUT</span>
+                        <span class="badge text-bg-warning text-dark" th:if="${mv.type.name() == 'TRANSFER'}">TRANSFER</span>
+                    </td>
+                    <td>
+                        <div class="fw-semibold" th:text="${mv.product.name}">Товар</div>
+                        <div class="text-muted small" th:text="${mv.product.sku}">SKU</div>
+                    </td>
+                    <td>
+                        <div th:text="${mv.warehouse != null ? mv.warehouse.name : '-'}">Склад</div>
+                        <div class="text-muted small" th:if="${mv.targetWarehouse != null}"
+                             th:text="'→ ' + ${mv.targetWarehouse.name}">→ Склад</div>
+                    </td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(mv.quantity, 1, 'COMMA', 3, 'POINT')}">0.000</td>
+                    <td th:text="${mv.batch != null ? mv.batch.id : '-'}">-</td>
+                    <td th:text="${mv.order != null ? mv.order.number : '-'}">-</td>
+                    <td th:text="${mv.comment}">Комментарий</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(movements)}">
+                    <td colspan="8" class="text-center text-muted py-4">Движений пока нет.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

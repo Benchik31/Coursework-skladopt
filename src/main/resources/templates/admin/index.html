@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Админ-панель | Склад</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main>
+        <div th:replace="~{fragments/breadcrumbs :: breadcrumbs('Админ-панель')}"></div>
+        <h1 class="h4 mb-3">Админ-панель</h1>
+        <p class="text-muted mb-4">Быстрый доступ к ключевым справочникам и показателям.</p>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Товары</div>
+                        <div class="fs-4 fw-semibold" th:text="${productsCount}">0</div>
+                        <a class="stretched-link" th:href="@{/products}"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Клиенты</div>
+                        <div class="fs-4 fw-semibold" th:text="${customersCount}">0</div>
+                        <a class="stretched-link" th:href="@{/customers}"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Поставщики</div>
+                        <div class="fs-4 fw-semibold" th:text="${suppliersCount}">0</div>
+                        <a class="stretched-link" th:href="@{/suppliers}"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Пользователи</div>
+                        <div class="fs-4 fw-semibold" th:text="${usersCount}">0</div>
+                        <a class="stretched-link" th:href="@{/admin/users}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fw-semibold">Заказы</div>
+                            <a class="small" th:href="@{/orders}">Открыть</a>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <div>
+                                <div class="text-muted small">DRAFT</div>
+                                <div class="fs-5 fw-semibold" th:text="${ordersDraft}">0</div>
+                            </div>
+                            <div>
+                                <div class="text-muted small">CONFIRMED</div>
+                                <div class="fs-5 fw-semibold" th:text="${ordersConfirmed}">0</div>
+                            </div>
+                            <div>
+                                <div class="text-muted small">SHIPPED</div>
+                                <div class="fs-5 fw-semibold" th:text="${ordersShipped}">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fw-semibold">Склад</div>
+                            <a class="small" th:href="@{/stock}">Остатки</a>
+                        </div>
+                        <div class="text-muted small mb-1">Низкие остатки</div>
+                        <div class="fs-4 fw-semibold" th:text="${lowStock}">0</div>
+                        <div class="d-flex gap-3 mt-2 text-muted small">
+                            <span th:text="'Движений: ' + ${movementsCount}">Движений</span>
+                            <span th:text="'Поставок: ' + ${batchesCount}">Поставок</span>
+                        </div>
+                        <div class="mt-2">
+                            <a class="btn btn-outline-primary btn-sm" th:href="@{/stock-movements}">Движения</a>
+                            <a class="btn btn-outline-secondary btn-sm" th:href="@{/batches}">Поставки</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="fw-semibold mb-2">Справочники</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-light border" th:href="@{/categories}">Категории</a>
+                            <a class="btn btn-light border" th:href="@{/warehouses}">Склады</a>
+                            <a class="btn btn-light border" th:href="@{/suppliers}">Поставщики</a>
+                            <a class="btn btn-light border" th:href="@{/customers}">Клиенты</a>
+                            <a class="btn btn-light border" th:href="@{/admin/users}">Пользователи</a>
+                            <a class="btn btn-light border" th:href="@{/reports}">Отчёты</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

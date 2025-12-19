@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="breadcrumbs(title)" aria-label="breadcrumb">
+    <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a th:href="@{/}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page" th:text="${title}">Страница</li>
+    </ol>
+</nav>
+</body>
+</html>
