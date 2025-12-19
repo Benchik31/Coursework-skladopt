@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Регистрация | Fenix</title>
+</head>
+<body class="bg-light">
+<main class="container py-5" style="max-width: 640px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h1 class="h4 mb-3 text-center">Регистрация</h1>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            <form th:action="@{/register}" th:object="${form}" method="post" class="row g-3">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="col-12">
+                    <label class="form-label" for="username">Логин</label>
+                    <input id="username" type="text" class="form-control" th:field="*{username}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="fullName">Имя</label>
+                    <input id="fullName" type="text" class="form-control" th:field="*{fullName}" placeholder="Ваше имя">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="email">E-mail</label>
+                    <input id="email" type="email" class="form-control" th:field="*{email}" placeholder="you@example.com">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="password">Пароль</label>
+                    <input id="password" type="password" class="form-control" th:field="*{password}" required>
+                </div>
+                    <div class="col-md-6">
+                    <label class="form-label" for="passwordConfirm">Подтверждение</label>
+                    <input id="passwordConfirm" type="password" class="form-control" th:field="*{passwordConfirm}" required>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit">Зарегистрироваться</button>
+                </div>
+                <div class="col-12 text-center">
+                    <a th:href="@{/login}">Уже есть аккаунт? Войти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

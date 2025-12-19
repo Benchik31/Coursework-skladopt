@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title th:text="${pageTitle}">Категория</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main>
+        <div th:replace="~{fragments/breadcrumbs :: breadcrumbs(pageTitle)}"></div>
+        <h1 class="h4 mb-3" th:text="${pageTitle}">Категория</h1>
+
+        <form th:action="@{${category.id} != null ? '/categories/' + ${category.id} + '/edit' : '/categories/new'}"
+              th:object="${category}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="name">Название</label>
+                <input id="name" type="text" class="form-control" th:field="*{name}" required>
+                <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="parent">Родитель (опционально)</label>
+                <select id="parent" class="form-select" th:field="*{parent}">
+                    <option th:value="${null}">—</option>
+                    <option th:each="c : ${categories}"
+                            th:if="${category.id == null or c.id != category.id}"
+                            th:value="${c.id}" th:text="${c.name}">Категория</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+                <a class="btn btn-outline-secondary" th:href="@{/categories}">Отмена</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

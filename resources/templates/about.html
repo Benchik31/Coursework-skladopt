@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Об авторе | Fenix</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main class="py-4">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-7">
+                <div class="mb-3">
+                    <p class="text-uppercase small text-muted fw-semibold mb-2">Fenix • Курсовой проект</p>
+                    <h1 class="h3 fw-bold mb-2">Информационно-справочная система оптового склада</h1>
+                    <p class="text-muted">Учет номенклатуры, партий, складских остатков и заказов.</p>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">ФИО</dt>
+                            <dd class="col-sm-8">Якубов Бинягу Олегович</dd>
+
+                            <dt class="col-sm-4">Группа / ВУЗ</dt>
+                            <dd class="col-sm-8">ПИ23-2, прикладная информатика, Финансовый университет при Правительстве РФ</dd>
+
+                            <dt class="col-sm-4">Контакты</dt>
+                            <dd class="col-sm-8">+7 910 013-71-03, bendzhamin@gmail.com</dd>
+
+                            <dt class="col-sm-4">Тема</dt>
+                            <dd class="col-sm-8">ИС для оптового склада</dd>
+
+                            <dt class="col-sm-4">Сроки</dt>
+                            <dd class="col-sm-8">Старт: 15 ноября 2025 • Завершение: 1 декабря 2025</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h5 class="fw-semibold mb-2">Стек и архитектура</h5>
+                    <ul class="list-unstyled text-muted mb-0">
+                        <li>Java 17, Spring Boot 3 (Web, Data JPA, Security), Thymeleaf.</li>
+                        <li>PostgreSQL, ORM на Hibernate, репозитории Spring Data.</li>
+                        <li>Слоистая архитектура: Controller → Service → Repository → DB.</li>
+                        <li>Валидация через jakarta.validation, CSRF и разграничение ролей (ADMIN/USER).</li>
+                        <li>UI: Bootstrap 5 + кастомная тема Fenix (градиенты #FA7355 / #6C48ED).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="fw-semibold mb-3">Что реализовано</h5>
+                        <ul class="text-muted mb-3">
+                            <li>Каталог товаров с карточками и фото, CRUD, фильтры.</li>
+                            <li>Остатки по складам, резервы, движения (IN/OUT/TRANSFER).</li>
+                            <li>Поставки (партии), клиенты/поставщики, склады, категории.</li>
+                            <li>Заказы с жизненным циклом DRAFT → CONFIRMED → SHIPPED.</li>
+                            <li>Отчёты: оборот, низкие остатки, подборки.</li>
+                            <li>Админ-панель: пользователи, роли, справочники.</li>
+                        </ul>
+                        <h6 class="fw-semibold">Дальше</h6>
+                        <p class="text-muted mb-0">Улучшение фильтров, экспортов, графиков и UX мелочей.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

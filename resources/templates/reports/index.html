@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(~{::title})}">
+    <title>Отчёты | Склад</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+    <main>
+        <div th:replace="~{fragments/breadcrumbs :: breadcrumbs('Отчёты')}"></div>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h1 class="h4 mb-0">Отчёты</h1>
+                <p class="text-muted mb-0">Низкие остатки, ТОП товаров по обороту, динамика по месяцам.</p>
+            </div>
+            <div class="btn-group">
+                <a class="btn btn-outline-secondary" th:href="@{/stock-movements/export}" aria-disabled="true">Экспорт движений</a>
+                <a class="btn btn-outline-secondary" th:href="@{/orders/export}" aria-disabled="true">Экспорт заказов</a>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header fw-semibold">Низкие остатки</div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Склад</th>
+                                <th class="text-end">Доступно</th>
+                                <th class="text-end">Мин.</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${lowStock}">
+                                <td th:text="${item.product.name}">Товар</td>
+                                <td th:text="${item.warehouse.name}">Склад</td>
+                                <td class="text-end" th:text="${item.available}">0</td>
+                                <td class="text-end" th:text="${item.product.minStock}">0</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(lowStock)}">
+                                <td colspan="4" class="text-center text-muted py-3">Низких остатков нет.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header fw-semibold">ТОП товаров по обороту (заглушка)</div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th class="text-end">Оборот</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="row : ${topProducts}">
+                                <td th:text="${row.name}">Товар</td>
+                                <td class="text-end" th:text="${row.turnover}">0</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(topProducts)}">
+                                <td colspan="2" class="text-center text-muted py-3">Данных нет.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                <span>Оборот по месяцам</span>
+            </div>
+            <div class="card-body">
+                <canvas id="turnoverChart" height="120"></canvas>
+                <table class="table table-sm mt-3">
+                    <thead>
+                    <tr>
+                        <th>Месяц</th>
+                        <th class="text-end">Сумма</th>
+                        <th class="text-end">Изм. к прошлому месяцу</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${turnover}">
+                        <td th:text="${row.month}">2025-01</td>
+                        <td class="text-end" th:text="${row.amount}">0</td>
+                        <td class="text-end">
+                            <span th:if="${row.mom != null}"
+                                  th:text="${row.mom} + '%'">0%</span>
+                            <span th:if="${row.mom == null}" class="text-muted">—</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(turnover)}">
+                        <td colspan="3" class="text-center text-muted py-3">Данных нет.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+        integrity="sha384-TG6u40qCMgfHdCqkfNNpJBWlAbIYW/W2PASi6DPd7OJbRRqtD9h5pz50jdK4ZkVO"
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const labels = [[${turnover}]].map(r => r.month);
+    const data = [[${turnover}]].map(r => r.amount);
+    /*]]>*/
+    const ctx = document.getElementById('turnoverChart');
+    if (ctx && labels.length > 0) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Оборот',
+                    data: data,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,0.15)',
+                    tension: 0.2,
+                    fill: true
+                }]
+            },
+            options: {
+                plugins: {legend: {display: false}},
+                scales: {
+                    y: {beginAtZero: true}
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
